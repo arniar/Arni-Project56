@@ -24,7 +24,7 @@ var apiRouter = require('./routes/api');
 var app = express(); // Create an Express application
 
 // MongoDB connection URI
-const mongoURI = 'mongodb://localhost:27017/Arni'; // or use MongoDB Atlas URI
+const mongoURI =  process.env.MongoDB_url||'mongodb://localhost:27017/Arni'; // or use MongoDB Atlas URI
 
 // Connect to MongoDB using Mongoose
 mongoose.connect(mongoURI)
