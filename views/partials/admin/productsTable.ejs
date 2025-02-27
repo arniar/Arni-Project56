@@ -1,0 +1,90 @@
+<% products.forEach((product) => { %>
+    <tr>
+        <td>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <img class="category-image" src="">
+            <div>
+              <div>  <%= product.name %></div>
+            </div>
+          </div>
+        
+      </td>
+      <td><%= product.productId %></td>
+      <td><%= product.price %></td>
+      <td><%= product.discountPrice %></td>
+      <td class="<%= product.status === 'active' ? 'statusActive' : 'statusInactive' %>">
+        <%= product.status %>
+    </td>
+      <td><%= product.description %></td>
+      <td>
+        <div class="action-buttons">
+          <!-- Edit Button -->
+          <button class="action-btn edit-product-btn">✏️</button>
+  
+          <!-- Modal -->
+          <div id="catModalOverlay" class="cat-modal__overlay active">
+            <div class="cat-modal__container">
+              <div class="cat-modal__header">
+                <h2>Create Category</h2>
+                <button class="cat-modal__close-btn" onclick="catModal.close()" id="catModalCloseBtn">✕</button>
+              </div>
+              <div class="cat-modal__content">
+                <form id="catCreateForm" class="cat-form" action="/admin/products/edit" method="POST">
+                  <div class="product-details">
+                    <div class="cat-form__group">
+                      <label class="cat-form__label">Product Name</label>
+                      <input type="text" class="cat-form__input" id="productName" name="name"  value="<%= product.name %>">
+                    </div>
+                    <div class="cat-form__group">
+                      <label class="cat-form__label">Description</label>
+                      <textarea class="cat-form__input" name="description" id="description"><%= product.description %></textarea>
+  
+                    </div>
+                    <div class="cat-form__group">
+                      <label class="cat-form__label">Price</label>
+                      <input type="number" class="cat-form__input" id="price" name="price" value="<%= product.price%>">
+                    </div>
+                    <div class="cat-form__group">
+                      <label class="cat-form__label">Category</label>
+                      <select class="cat-form__input" id="category" name="category">
+                        <!-- Default Option -->
+                        <option value="default" <%= product.subCategory ? '' : 'selected' %>>Select Category</option>
+                        
+                        <!-- Main Categories with Subcategories -->
+                        <% mainCategories.forEach((main) => { %>
+                          <optgroup label="<%= main.mainCategoryName %>">
+                            <% subCategories
+                                .filter((sub) => sub.mainCategory.toString() === main._id.toString())
+                                .forEach((sub) => { %>
+                              <option value="<%= sub._id %>" <%= product.subCategory && product.subCategory.toString() === sub._id.toString() ? 'selected' : '' %>>
+                                <%= sub.subCategoryName %>
+                              </option>
+                            <% }) %>
+                          </optgroup>
+                        <% }) %>
+                      </select>
+                      <input type="hidden" class="id" name="id" value="<%= product._id %>">  
+                      
+                    </div>
+                    <div class="cat-modal__btn-group">
+                      <button type="button" class="cat-btn cat-btn--cancel" onclick="catModal.close()">Cancel</button>
+                      <button type="submit" class="cat-btn cat-btn--submit">Confirm</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <% if (product.status === 'active') { %>
+            <button class="action-btn makeInactive">🔴</button>
+        <% } else { %>
+          <button class="action-btn makeActive">🟢</button>
+        <% } %>
+          <!-- Delete Button -->
+          <button class="action-btn delete-product-btn permanentDelete">🗑️</button>
+          <a href="/admin/variant?id=<%= product._id %>"><button class="action-btn ">Let's Go ➡️</button></a>
+        </div>
+      </td>
+    </tr>
+  <% }) %>
+  
